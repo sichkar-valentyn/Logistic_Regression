@@ -1,13 +1,27 @@
+
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
+<html lang="en-US">
 
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,maximum-scale=2">
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <link rel="stylesheet" type="text/css" media="screen" href="/Logistic_Regression/assets/css/style.css?v=c4771385eedc8d450dea424f7df6972530397a71">
 
-{% seo %}
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Logistic Regression with Neural Network mindset in Python | Logistic_Regression</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="Logistic Regression with Neural Network mindset in Python" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Implementing Logistic Regression for the Image Recognition task" />
+<meta property="og:description" content="Implementing Logistic Regression for the Image Recognition task" />
+<link rel="canonical" href="https://sichkar-valentyn.github.io/Logistic_Regression/" />
+<meta property="og:url" content="https://sichkar-valentyn.github.io/Logistic_Regression/" />
+<meta property="og:site_name" content="Logistic_Regression" />
+<script type="application/ld+json">
+{"@type":"WebSite","headline":"Logistic Regression with Neural Network mindset in Python","url":"https://sichkar-valentyn.github.io/Logistic_Regression/","name":"Logistic_Regression","description":"Implementing Logistic Regression for the Image Recognition task","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
   </head>
 
   <body>
@@ -15,48 +29,586 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          {% if site.github.is_project_page %}
-            <a id="forkme_banner" href="{{ site.github.repository_url }}">View on GitHub</a>
-          {% endif %}
+          
+            <a id="forkme_banner" href="https://github.com/sichkar-valentyn/Logistic_Regression">View on GitHub</a>
+          
 
-          <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
-          <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+          <h1 id="project_title">Logistic_Regression</h1>
+          <h2 id="project_tagline">Implementing Logistic Regression for the Image Recognition task</h2>
 
-          {% if site.show_downloads %}
-            <section id="downloads">
-              <a class="zip_download_link" href="{{ site.github.zip_url }}">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="{{ site.github.tar_url }}">Download this project as a tar.gz file</a>
-            </section>
-          {% endif %}
+          
         </header>
     </div>
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        {{ content }}
+        <h1 id="logistic-regression-with-neural-network-mindset-in-python">Logistic Regression with Neural Network mindset in Python</h1>
+<p>Implementing <strong>Logistic Regression</strong> for the <strong>Image Recognition</strong> task.
+<br /><a href="https://doi.org/10.5281/zenodo.1317904"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1317904.svg" alt="DOI" /></a></p>
+
+<h2 id="content">Content</h2>
+<p>Theory and experimental results (on this page):</p>
+
+<ul>
+  <li><a href="#logistic-regression">Logistic Regression</a>
+    <ul>
+      <li><a href="#problem-statement">Problem Statement</a></li>
+      <li><a href="#general-algorithm">General algorithm</a></li>
+      <li><a href="#mathematical-model-of-the-algorithm">Mathematical model of the algorithm</a></li>
+      <li><a href="#general-architecture-of-the-algorithm">General Architecture of the algorithm</a></li>
+    </ul>
+  </li>
+  <li><a href="#loading-data-from-cifar-10-dataset">Loading data from CIFAR-10 dataset</a></li>
+  <li><a href="#flatten-prepared-datsets">Flatten prepared datsets</a></li>
+  <li><a href="#preprocessing-dataset">Preprocessing datasets</a></li>
+  <li><a href="#creating-helper-functions">Creating Helper Functions</a></li>
+  <li><a href="#creating-model">Creating Model</a></li>
+  <li><a href="#runing-created-model">Runing created model</a></li>
+  <li><a href="#testing-trained-model">Testing trained model</a></li>
+  <li><a href="#plotting-cost-function-history">Plotting Cost Function history</a></li>
+  <li><a href="#testing-different-learning-rates">Analysis - Testing different learning rates</a></li>
+  <li><a href="#testing-our-own-image">Testing our own image</a></li>
+  <li><a href="#full-codes">Full Codes</a></li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="logistic-regression"><a id="logistic-regression">Logistic Regression</a></h3>
+<p>Logistic Regression – is an algorithm for Binary Classification. Example: Input Image has some animal, output is 1 if it is a bird and 0 if it is not. Logistic Regression uses sigmoid function as an activation function in order to keep output between 0 and 1. Here we will build <strong>Logistic Regression Classifier</strong> to recognize birds.</p>
+
+<p><br /></p>
+
+<h4 id="problem-statement"><a id="problem-statement">Problem Statement</a></h4>
+<p>From Cifar-10 dataset we will take images with birds and non-birds. We will mark birds with label 1 (y=1) and others with 0 (y=0). We will divide dataset for training subset and testing subset. Finally, we will build <strong>Simple Image-Recognition Algorithm</strong> for classification pictures as birds or non-birds. No “for” loops will be used.</p>
+
+<p><br /></p>
+
+<h4 id="general-algorithm"><a id="general-algorithm">General algorithm</a></h4>
+<p>General algorithm is as following:</p>
+<ul>
+  <li>Initializing parameters</li>
+  <li>Calculating Cost Function and its Gradient</li>
+  <li>Using an optimizational algorithm for updating parameters (Gradient Descent)</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="mathematical-model-of-the-algorithm"><a id="mathematical-model-of-the-algorithm">Mathematical model of the algorithm</a></h4>
+
+<p><img src="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/images/Logistic_Regression/Mathematical_model.png" alt="Mathematical_model.png" /></p>
+
+<p><br /></p>
+
+<h4 id="general-architecture-of-the-algorithm"><a id="general-architecture-of-the-algorithm">General Architecture of the algorithm</a></h4>
+
+<p><img src="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/images/Logistic_Regression/Architecture_of_Logistic_Regression_Algorithm.png" alt="Architecture_of_Logistic_Regression_Algorithm.png" /></p>
+
+<p><br /></p>
+
+<h3 id="loading-data-from-cifar-10-dataset"><a id="loading-data-from-cifar-10-dataset">Loading data from CIFAR-10 dataset</a></h3>
+<p>Loading data from CIFAR-10 dataset and extracting images with birds. Plotting examples with labels.
+<br />Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Creating function for loading single batch of CIFAR-10 dataset</span>
+<span class="k">def</span> <span class="nf">single_batch_cifar10</span><span class="p">(</span><span class="nb">file</span><span class="p">):</span>
+    <span class="c"># Opening file for reading in binary mode</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_single_batch</span><span class="p">:</span>
+        <span class="n">d_single_batch</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f_single_batch</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">'latin1'</span><span class="p">)</span>  <span class="c"># dictionary type, we use 'latin1' for python3</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">d_single_batch</span><span class="p">[</span><span class="s">'data'</span><span class="p">]</span>  <span class="c"># numpy.ndarray type, (10000, 3072)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">d_single_batch</span><span class="p">[</span><span class="s">'labels'</span><span class="p">]</span>  <span class="c"># list type</span>
+        <span class="s">"""Initially every batch's dictionary with key 'data' has shape (10000, 3072)
+        Where, 10000 - number of image samples
+        3072 - three channels of image (red + green + blue)
+        Every row contains an image 32x32 pixels with its three channels"""</span>
+        
+        <span class="c"># Here we reshape and transpose ndarray for further use</span>
+        <span class="c"># Firstly, we need to divide line (3072) for 3 channels</span>
+        <span class="c"># Then, we divide each channel for 32 by 32 matrixes</span>
+        <span class="c"># Finally, we use transpose to put channels at the end in order to be able to show images</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># (10000, 32, 32, 3)</span>
+        <span class="c"># Making numpy array from list of labels</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c"># Returning ready data</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+
+<span class="c"># Preparing labels for each class</span>
+<span class="c"># CIFAR-10 has 10 classes from 0 to 9</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">'plane'</span><span class="p">,</span> <span class="s">'car'</span><span class="p">,</span> <span class="s">'bird'</span><span class="p">,</span> <span class="s">'cat'</span><span class="p">,</span> <span class="s">'deer'</span><span class="p">,</span> <span class="s">'dog'</span><span class="p">,</span> <span class="s">'frog'</span><span class="p">,</span> <span class="s">'horse'</span><span class="p">,</span> <span class="s">'ship'</span><span class="p">,</span> <span class="s">'truck'</span><span class="p">]</span>
+
+<span class="c"># Loading data from file</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">single_batch_cifar10</span><span class="p">(</span><span class="s">'datasets/data_batch_1'</span><span class="p">)</span>
+
+<span class="c"># Preparing list for storing indexes of birds and non-birds from dataset</span>
+<span class="n">indexes_for_birds</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">indexes_for_non_birds</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c"># Going through loaded dataset and picking up needed indexes</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">indexes_for_birds</span> <span class="o">+=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">indexes_for_non_birds</span> <span class="o">+=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="c"># Checking how many images with birds we got</span>
+<span class="n">m_birds</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexes_for_birds</span><span class="p">)</span>  <span class="c"># 1032</span>
+<span class="k">print</span><span class="p">(</span><span class="n">m_birds</span><span class="p">)</span>
+<span class="k">print</span><span class="p">()</span>
+
+<span class="c"># Getting from data only images with birds as we will work with one type only</span>
+<span class="n">batch_mask</span> <span class="o">=</span> <span class="n">indexes_for_birds</span>
+<span class="n">x_birds</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">batch_mask</span><span class="p">]</span>
+<span class="n">y_birds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">m_birds</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x_birds</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_birds</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>  <span class="c"># (1032, 32, 32, 3)  (1032,)</span>
+<span class="k">print</span><span class="p">()</span>
+
+<span class="c"># Getting from data images with non-birds</span>
+<span class="n">batch_mask</span> <span class="o">=</span> <span class="n">indexes_for_non_birds</span><span class="p">[:</span><span class="n">m_birds</span><span class="p">]</span>  <span class="c"># Slicing to make amout of images with non-birds the same with birds</span>
+<span class="n">x_non_birds</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">batch_mask</span><span class="p">]</span>
+<span class="n">y_non_birds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">m_birds</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x_non_birds</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_non_birds</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>  <span class="c"># (1032, 32, 32, 3)  (1032,)</span>
+<span class="k">print</span><span class="p">()</span>
+
+<span class="c"># Stacking data with birds and non-birds together</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">x_birds</span><span class="p">,</span> <span class="n">x_non_birds</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">y_birds</span><span class="p">,</span> <span class="n">y_non_birds</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>  <span class="c"># (2064, 32, 32, 3)  (2064,)</span>
+<span class="k">print</span><span class="p">()</span>
+
+<span class="c"># Shuffle data</span>
+<span class="c"># Multi-dimensional arrays are only shuffled along the first axis</span>
+<span class="c"># By using seed we generate two times the same random numbers and save appropriate connection: image --&gt; label</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c"># Preparing data for training and testing</span>
+<span class="c"># Data for training is taken with first 1900 examples</span>
+<span class="n">batch_mask</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1900</span><span class="p">))</span>  <span class="c"># [0 .. 1899]</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">batch_mask</span><span class="p">]</span>  <span class="c"># (1900, 32, 32, 3)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">batch_mask</span><span class="p">]</span>  <span class="c"># (1900,)</span>
+<span class="c"># Data for testing is taken with last 100 examples</span>
+<span class="n">batch_mask</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1900</span><span class="p">,</span> <span class="mi">2064</span><span class="p">))</span>  <span class="c"># [932 .. 1031]</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">batch_mask</span><span class="p">]</span>  <span class="c"># (164, 32, 32, 3)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">batch_mask</span><span class="p">]</span>  <span class="c"># (164,)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+
+<span class="c"># Plotting 5 examples of images and checking labels</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">'figure.figsize'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span> <span class="c"># Setting default size of plots</span>
+<span class="c"># Preparing figures for plotting</span>
+<span class="n">figure_1</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c"># 'ax 'is as (3,) np array and we can call each time ax[0]</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">'label = '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">y_train</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">'label ='</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">y_train</span><span class="p">[</span><span class="mi">20</span><span class="p">])))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">300</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">'label ='</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">y_train</span><span class="p">[</span><span class="mi">300</span><span class="p">])))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">1000</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">'label ='</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">y_train</span><span class="p">[</span><span class="mi">1000</span><span class="p">])))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">1500</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">'label ='</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">y_train</span><span class="p">[</span><span class="mi">1500</span><span class="p">])))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/images/Logistic_Regression/plotting_examples.png" alt="plotting_examples.png" /></p>
+
+<p><br /></p>
+
+<h3 id="flatten-prepared-datsets"><a id="flatten-prepared-datsets">Flatten prepared datsets</a></h3>
+<p>For convenience we will reshape images of shape (32, 32, 3) into numpy array of shape (3072, 1).
+<br />By using ‘-1’ we say that number of column is unknown, but number of rows is known.
+<br />By using ‘.T’ we’re transposing each image and making their data arranged in columns.
+<br />Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_train_flatten</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">y_train_columns</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">x_test_flatten</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">y_test_columns</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">x_train_flatten</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">y_train_columns</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x_test_flatten</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">y_test_columns</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c"># (3072, 1900)</span>
+<span class="c"># (1, 1900)</span>
+<span class="c"># (3072, 164)</span>
+<span class="c"># (1, 164)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="preprocessing-datasets"><a id="preprocessing-dataset">Preprocessing datasets</a></h3>
+<p>Normalizing whole data by dividing /255.0
+<br />Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_train_processed</span> <span class="o">=</span> <span class="n">x_train_flatten</span> <span class="o">/</span> <span class="mf">255.0</span>
+<span class="n">x_test_processed</span> <span class="o">=</span> <span class="n">x_test_flatten</span> <span class="o">/</span> <span class="mf">255.0</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="creating-helper-functions"><a id="creating-helper-functions">Creating Helper Functions</a></h3>
+
+<p><img src="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/images/Logistic_Regression/Helper_functions.png" alt="Helper_functions.png" /></p>
+
+<p><br />Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Function to calculate sigmoid</span>
+<span class="c"># Function computes sigmoid of input</span>
+<span class="c"># Input is a scalar or numpy array of any size</span>
+<span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">s</span>
+	
+  
+<span class="c"># Function for parameters initilization</span>
+<span class="c"># Initializing weights as zero vector with shape (dim, 1) and bias as 0</span>
+<span class="k">def</span> <span class="nf">initialize_with_zeros</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span>
+	
+  
+<span class="c"># Function for "forward" and "backward" propagation steps</span>
+<span class="c"># Computes the Cost Function and its Gradient</span>
+<span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c"># Number of input images</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c"># Computing Activation</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+    <span class="c"># Computing Cost Function</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">A</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>  <span class="c"># Deleting all 1-dimensions from array</span>
+    <span class="c"># Computing Gradient</span>
+    <span class="n">dw</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">A</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">A</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="p">{</span><span class="s">'dw'</span><span class="p">:</span> <span class="n">dw</span><span class="p">,</span> <span class="s">'db'</span><span class="p">:</span> <span class="n">db</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">grad</span><span class="p">,</span> <span class="n">cost</span>
+
+
+<span class="c"># Function for updating parameters</span>
+<span class="c"># Implementation of optimizing w and b by running Gradient Descent Algorithm</span>
+<span class="c"># Function returns:</span>
+<span class="c"># params - dictionary with weights and bias</span>
+<span class="c"># grads - dictionary with gradient of weights and bias</span>
+<span class="c"># cost_history - history with list of all costs computed during optimization</span>
+<span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">number_of_iterations</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">print_cost</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+    <span class="c"># Preparing list for storing history of computed cost</span>
+    <span class="n">cost_history</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c"># Iterating and optimizing parameters</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_iterations</span><span class="p">):</span>
+        <span class="c"># Computing cost and gradient</span>
+        <span class="n">grad</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">propagate</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="c"># Retrieving derivatives</span>
+        <span class="n">dw</span> <span class="o">=</span> <span class="n">grad</span><span class="p">[</span><span class="s">'dw'</span><span class="p">]</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">grad</span><span class="p">[</span><span class="s">'db'</span><span class="p">]</span>
+        
+        <span class="c"># Updating parameters</span>
+        <span class="n">w</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">dw</span>
+        <span class="n">b</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">db</span>
+        
+        <span class="c"># Recording cost into the history every 100 iterations</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">cost_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+            
+        <span class="c"># Printing cost every 100 iterations</span>
+        <span class="k">if</span> <span class="n">print_cost</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'Cost after {0}: {1}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">cost</span><span class="p">))</span>
+    
+    <span class="c"># Saving updated parameters and gradient</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">'w'</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s">'b'</span><span class="p">:</span> <span class="n">b</span><span class="p">}</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="p">{</span><span class="s">'dw'</span><span class="p">:</span> <span class="n">dw</span><span class="p">,</span> <span class="s">'db'</span><span class="p">:</span> <span class="n">db</span><span class="p">}</span>
+            
+    <span class="k">return</span> <span class="n">params</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">cost_history</span>
+
+
+<span class="c"># Function for predicting</span>
+<span class="c"># Computing prediction scores and converting them</span>
+<span class="c"># into 0 if activation is less or equal to 0.5 </span>
+<span class="c"># into 1 if activation is more than 0.5# Function returns:</span>
+<span class="c"># Function returns:</span>
+<span class="c"># y_prediction - numpy array (vector) containing all predictions for input images</span>
+<span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c"># Retrieving number of input images</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c"># Preparing zero valued vector for results</span>
+    <span class="n">y_prediction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
+    <span class="c"># Reshaping weights giving to it one more dimension</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c"># Computing vector A with probabilities</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+    
+    <span class="c"># Converting probabilities to 1 or 0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">y_prediction</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">y_prediction</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">return</span> <span class="n">y_prediction</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="creating-model"><a id="creating-model">Creating Model</a></h3>
+<p>Model collects together all helper functions and implements learning procedure.
+<br />Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Function for model</span>
+<span class="c"># Merging all helper functions into the model</span>
+<span class="c"># Function returns:</span>
+<span class="c"># d - dictionary with information about the model</span>
+<span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">x_train_processed</span><span class="p">,</span> <span class="n">y_train_columns</span><span class="p">,</span> <span class="n">x_test_processed</span><span class="p">,</span> <span class="n">y_test_columns</span><span class="p">,</span> <span class="n">number_of_iterations</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">print_cost</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+    <span class="c"># Initializing parameters with 0</span>
+    <span class="n">w</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">initialize_with_zeros</span><span class="p">(</span><span class="n">x_train_processed</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="c"># Optimization with Gradient Descent</span>
+    <span class="n">params</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">cost_history</span> <span class="o">=</span> <span class="n">optimize</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x_train_processed</span><span class="p">,</span> <span class="n">y_train_columns</span><span class="p">,</span> <span class="n">number_of_iterations</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">print_cost</span><span class="p">)</span>
+    
+    <span class="c"># Retrieving updated parameters</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s">'w'</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s">'b'</span><span class="p">]</span>
+    
+    <span class="c"># Predictions for training and test datasets</span>
+    <span class="n">y_prediction_train</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x_train_processed</span><span class="p">)</span>
+    <span class="n">y_prediction_test</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x_test_processed</span><span class="p">)</span>
+    
+    <span class="c"># Printing train and test accuracy</span>
+    <span class="c"># By calculating difference between y predicted and true y we receive matrix from which we calculate mean</span>
+    <span class="c"># That is error: np.mean(np.abs(y_prediction_train - y_train_columns)) * 100</span>
+    <span class="c"># Consequently, accuracy is: 100 - np.mean(np.abs(y_prediction_train - y_train_columns)) * 100</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'train accuracy: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">y_prediction_train</span> <span class="o">-</span> <span class="n">y_train_columns</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'test accuracy: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">y_prediction_test</span> <span class="o">-</span> <span class="n">y_test_columns</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+    
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s">'cost_history'</span><span class="p">:</span> <span class="n">cost_history</span><span class="p">,</span>
+         <span class="s">'y_prediction_train'</span> <span class="p">:</span> <span class="n">y_prediction_train</span><span class="p">,</span>
+         <span class="s">'y_prediction_test'</span><span class="p">:</span> <span class="n">y_prediction_test</span><span class="p">,</span> 
+         <span class="s">'w'</span> <span class="p">:</span> <span class="n">w</span><span class="p">,</span> 
+         <span class="s">'b'</span> <span class="p">:</span> <span class="n">b</span><span class="p">,</span>
+         <span class="s">'learning_rate'</span> <span class="p">:</span> <span class="n">learning_rate</span><span class="p">,</span>
+         <span class="s">'number_of_iterations'</span><span class="p">:</span> <span class="n">number_of_iterations</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">d</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="runing-created-model"><a id="runing-created-model">Runing created model</a></h3>
+<p>Training model.
+<br />Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_train_processed</span><span class="p">,</span> <span class="n">y_train_columns</span><span class="p">,</span> <span class="n">x_test_processed</span><span class="p">,</span> <span class="n">y_test_columns</span><span class="p">,</span> <span class="n">number_of_iterations</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span> <span class="n">print_cost</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+<span class="c"># Cost after 0: 0.6931471805599465</span>
+<span class="c"># Cost after 100: 0.6422071848440031</span>
+<span class="c"># Cost after 200: 0.6232294691888273</span>
+<span class="c"># Cost after 300: 0.61247346616923</span>
+<span class="c"># Cost after 400: 0.6053670288253582</span>
+<span class="c"># Cost after 500: 0.6001730558029341</span>
+<span class="c"># Cost after 600: 0.5961023219319516</span>
+<span class="c"># Cost after 700: 0.5927504298277354</span>
+<span class="c"># Cost after 800: 0.5898898653821274</span>
+<span class="c"># Cost after 900: 0.5873826559137476</span>
+<span class="c"># Cost after 1000: 0.5851399055586426</span>
+<span class="c"># Cost after 1100: 0.5831014803590213</span>
+<span class="c"># Cost after 1200: 0.5812250826542966</span>
+<span class="c"># Cost after 1300: 0.5794800104247025</span>
+<span class="c"># Cost after 1400: 0.5778433996367697</span>
+<span class="c"># Cost after 1500: 0.5762978560480848</span>
+<span class="c"># Cost after 1600: 0.5748299036227793</span>
+<span class="c"># Cost after 1700: 0.5734289343532144</span>
+<span class="c"># Cost after 1800: 0.572086477978031</span>
+<span class="c"># Cost after 1900: 0.5707956826264765</span>
+
+<span class="c"># train accuracy: 71.47368421052632</span>
+<span class="c"># test accuracy: 62.19512195121951</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="testing-trained-model"><a id="testing-trained-model">Testing trained model</a></h3>
+<p>Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Checking how different images were classified with algorithm</span>
+<span class="c"># Setting index to check from test dataset</span>
+<span class="n">index</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c"># Plotting this image, but firstly reshaping it in form of (32, 32, 3)</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">'figure.figsize'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c"># Setting default size of plots</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x_test_flatten</span><span class="p">[:,</span> <span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+
+<span class="c"># Showing label</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'true label y = '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">y_test_columns</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">])))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'predicted label y = '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">'y_prediction_test'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">])))</span>
+</code></pre></div></div>
+
+<p><img src="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/images/Logistic_Regression/testing_prediction.png" alt="testing_prediction.png" /></p>
+
+<p><br /></p>
+
+<h3 id="plotting-cost-function-history"><a id="plotting-cost-function-history">Plotting Cost Function history</a></h3>
+<p>Plotting Cost Function history while it has been training
+<br />Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Plotting history of calculated costs</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">'figure.figsize'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c"># Setting default size of plots</span>
+
+<span class="c"># Retrieving costs from history and deleting one dimension from it</span>
+<span class="n">cost_history</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">'cost_history'</span><span class="p">])</span>
+
+<span class="c"># Plotting</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cost_history</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Cost'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Iterations'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Training of model with learning rate ='</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">'learning_rate'</span><span class="p">]),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/images/Logistic_Regression/model_with_0_005_learning_rate.png" alt="model_with_0_005_learning_rate.png" /></p>
+
+<p><br /></p>
+
+<h3 id="analysis---testing-different-learning-rates"><a id="testing-different-learning-rates">Analysis - Testing different learning rates</a></h3>
+<p>Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># It is very important to remember that learning rate determines how rapidly we will update parameters.</span>
+<span class="c"># And if learning rate is too large we might overshoot optimal value.</span>
+<span class="c"># Also, if learning rate is too small we might need too many iterations to converge to the best values.</span>
+
+<span class="c"># Creating list with different learning rates</span>
+<span class="n">learning_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">]</span>
+
+<span class="c"># Defining dictionary for models</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c"># Going through different learning rates</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">learning_rates</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'learning_rate = '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_train_processed</span><span class="p">,</span> <span class="n">y_train_columns</span><span class="p">,</span> <span class="n">x_test_processed</span><span class="p">,</span> <span class="n">y_test_columns</span><span class="p">,</span> <span class="n">number_of_iterations</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">print_cost</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">()</span>
+    
+<span class="c"># Plotting history of calculated costs for every model</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">'figure.figsize'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c"># Setting default size of plots</span>
+
+<span class="c"># Retrieving costs from history and deleting one dimension from it</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">learning_rates</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s">'cost_history'</span><span class="p">]),</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s">'learning_rate'</span><span class="p">]))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Cost'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Iterations'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Training of model with different learning rates'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s">'upper center'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="c"># learning_rate = 0.01</span>
+<span class="c"># train accuracy: 72.36842105263158</span>
+<span class="c"># test accuracy: 62.19512195121951</span>
+
+<span class="c"># learning_rate = 0.001</span>
+<span class="c"># train accuracy: 68.0</span>
+<span class="c"># test accuracy: 60.97560975609756</span>
+
+<span class="c"># learning_rate = 0.0001</span>
+<span class="c"># train accuracy: 63.15789473684211</span>
+<span class="c"># test accuracy: 53.04878048780488</span>
+</code></pre></div></div>
+
+<p><img src="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/images/Logistic_Regression/models_with_different_learning_rates.png" alt="models_with_different_learning_rates.png" /></p>
+
+<p><br /></p>
+
+<h3 id="testing-our-own-image"><a id="testing-our-own-image">Testing our own image</a></h3>
+<p>Consider following part of the code:
+<br />(related file: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Loading image</span>
+<span class="n">loaded_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">'images/eagle.jpeg'</span><span class="p">)</span>
+
+<span class="c"># Converting image into numpy array</span>
+<span class="n">array_of_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">loaded_image</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">array_of_image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c"># (270, 480, 3)</span>
+
+<span class="c"># Plotting loaded image</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="n">fig_1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">'figure.figsize'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c"># Setting default size of plots</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">array_of_image</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c"># Resizing image</span>
+<span class="n">array_of_image</span> <span class="o">=</span> <span class="n">resize</span><span class="p">(</span><span class="n">array_of_image</span><span class="p">,</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s">'reflect'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">array_of_image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c"># (32, 32, 3)</span>
+
+<span class="c"># Plotting resized image</span>
+<span class="n">fig_2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">array_of_image</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c"># Reshaping resized image and transposing it to make column from it with dimension (3072, 1)</span>
+<span class="n">array_of_image</span> <span class="o">=</span> <span class="n">array_of_image</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="o">*</span><span class="mi">32</span><span class="o">*</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+<span class="k">print</span><span class="p">(</span><span class="n">array_of_image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c"># (3072, 1)</span>
+<span class="k">print</span><span class="p">()</span>
+
+<span class="c"># Implementing forward pass for image</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">'w'</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s">'b'</span><span class="p">],</span> <span class="n">array_of_image</span><span class="p">)</span>
+
+<span class="c"># Showing result</span>
+<span class="c"># Deleting one dimension from p by np.squeeze</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'y = '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">p</span><span class="p">))))</span>
+</code></pre></div></div>
+
+<p><img src="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/images/Logistic_Regression/testing_users_image.png" alt="testing_users_image.png" /></p>
+
+<p><br /></p>
+
+<h3 id="full-codes-are-available-here"><a id="full-codes">Full codes are available here:</a></h3>
+<ul>
+  <li>Python: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.py">Logistic_Regression.py</a></li>
+  <li>jupyter notebook: <a href="https://github.com/sichkar-valentyn/Neural_Networks_for_Computer_Vision/blob/master/Codes/Logistic_Regression/Logistic_Regression.ipynb">Logistic_Regression.ipynb</a></li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="mit-license">MIT License</h3>
+<h3 id="copyright-c-2018-valentyn-n-sichkar">Copyright (c) 2018 Valentyn N Sichkar</h3>
+<h3 id="githubcomsichkar-valentyn">github.com/sichkar-valentyn</h3>
+<h3 id="reference-to">Reference to:</h3>
+<p>Valentyn N Sichkar. Neural Networks for computer vision in autonomous vehicles and robotics // GitHub platform. DOI: 10.5281/zenodo.1317904</p>
+
       </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        {% if site.github.is_project_page %}
-        <p class="copyright">{{ site.title | default: site.github.repository_name }} maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-        {% endif %}
+        
+        <p class="copyright">Logistic_Regression maintained by <a href="https://github.com/sichkar-valentyn">sichkar-valentyn</a></p>
+        
         <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
-    {% if site.google_analytics %}
-      <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', '{{ site.google_analytics }}', 'auto');
-        ga('send', 'pageview');
-      </script>
-    {% endif %}
+    
   </body>
 </html>
