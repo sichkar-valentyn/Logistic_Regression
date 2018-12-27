@@ -8,7 +8,7 @@ Implementing Neural Networks for Computer Vision in Autonomous Vehicles and Robo
 ### <a id="description">Description</a>
 Full description is available on GitHub Pages here:
 
-[https://sichkar-valentyn.github.io/Introduction_into_Neural_Networks](https://sichkar-valentyn.github.io/Introduction_into_Neural_Networks/)
+[https://sichkar-valentyn.github.io/Logistic_Regression](https://sichkar-valentyn.github.io/Logistic_Regression)
 
 [https://sichkar-valentyn.github.io/Neural_Networks_for_Computer_Vision](https://sichkar-valentyn.github.io/Neural_Networks_for_Computer_Vision)
 
